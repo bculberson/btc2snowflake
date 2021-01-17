@@ -7,6 +7,31 @@ resource "random_password" "password" {
   special = false
 }
 
+resource "aws_secretsmanager_secret" "corerpc" {
+  name = "corerpc"
+}
+
+resource "aws_secretsmanager_secret_version" "corerpc" {
+  secret_id     = aws_secretsmanager_secret.corerpc.id
+  secret_string = "http://bitcoin:${random_password.password.result}@${aws_instance.daemon.private_ip}:8332"
+}
+
+resource "aws_secretsmanager_secret" "sfuser" {
+  name = "sfuser"
+}
+
+resource "aws_secretsmanager_secret" "sfaccount" {
+  name = "sfaccount"
+}
+
+resource "aws_secretsmanager_secret" "sfprivatekey" {
+  name = "sfprivatekey"
+}
+
+resource "aws_secretsmanager_secret" "sfprivatekeypassword" {
+  name = "sfprivatekeypassword"
+}
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -111,7 +136,11 @@ resource "aws_iam_role_policy" "daemon_policy" {
       "Action": [
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
-          "ecr:GetAuthorizationToken"
+          "ecr:GetAuthorizationToken",
+          "secretsmanager:GetResourcePolicy",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds"
       ],
       "Effect": "Allow",
       "Resource": "*"

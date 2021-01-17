@@ -1,15 +1,25 @@
 # btc2snowflake
 
-This project will be used to get the BTC blockchain in snowflake.
+This project can be used to get the BTC blockchain in Snowflake.
 
-Donations received at https://commerce.coinbase.com/checkout/83f16545-6a9d-4cbc-970f-28cdd5a7b9fb
+Donations received online at 
+https://commerce.coinbase.com/checkout/83f16545-6a9d-4cbc-970f-28cdd5a7b9fb
+or through your wallet at
+bitcoin:bc1que4ks2m3hm874swquqmcmzx2zy5m5qvyt0gdma
+eth:0xD1C3c13277eA22eBED0Aef19C1b4B001d81f1433
+
+Data will land in stage for table btc_blockchain_raw which can be created like:
+CREATE TABLE IF NOT EXISTS btc_blockchain_raw (src variant);
+
+How to upload your private key to secrets manager
+aws secretsmanager put-secret-value --secret-string "$(< rsa_key.p8)" --secret-id sfprivatekey
+
+You also need secrets set for sfaccount, sfuser, sfprivatekeypassword
 
 
+examples of json from blockchain:
+{"type":"transaction","hash":"aa8628f83ff173c29006a75e344dc0b1bbad9a3cd02f33343d9a3581ae52f268","size":135,"virtual_size":135,"version":1,"lock_time":0,"block_number":474,"block_hash":"000000000d15d5f0d9971ab61c06e59f2e63e4a9cfbbb79d8f2b9d32243ee540","block_timestamp":1231950841,"is_coinbase":true,"index":0,"inputs":[],"outputs":[{"index":0,"script_asm":"04e590d7adbfbfa8b320ef2d412c8cb5967af9f7e3058fdebe454b0c2f743009021265beb10c635a31d7cd803c249d0c6a582cad05b3f41148a30a99fc21bf42d8 OP_CHECKSIG","script_hex":"4104e590d7adbfbfa8b320ef2d412c8cb5967af9f7e3058fdebe454b0c2f743009021265beb10c635a31d7cd803c249d0c6a582cad05b3f41148a30a99fc21bf42d8ac","required_signatures":null,"type":"nonstandard","addresses":["nonstandard632ed460099d8a5de1473fa7965f4fcaaca59bb6"],"value":5000000000}],"input_count":0,"output_count":1,"input_value":0,"output_value":5000000000,"fee":0,"item_id":"transaction_aa8628f83ff173c29006a75e344dc0b1bbad9a3cd02f33343d9a3581ae52f268"}
+{"type":"block","hash":"00000000fd3546b2d219faa87a34e1e6593769d753cf86fc647c4ee2a07710d1","size":216,"stripped_size":216,"weight":864,"number":470,"version":1,"merkle_root":"8def47739d3cedc44c4cb8fa229f81445888eacd062ce31f28cbdf1aab52cba1","timestamp":1231948637,"nonce":"bc071e18","bits":"1d00ffff","coinbase_param":"04ffff001d02f903","transaction_count":1,"item_id":"block_00000000fd3546b2d219faa87a34e1e6593769d753cf86fc647c4ee2a07710d1"}
 
 
-Add docker to core node
-https://serverfault.com/questions/836198/how-to-install-docker-on-aws-ec2-instance-with-ami-ce-ee-update
-
-Stream data to python script to upload to stage
-/usr/local/bin/bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 10 --provider-uri http://bitcoin:password@localhost:8332 --chain bitcoin  --blocks-output blocks.json --transactions-output transactions.json
 

@@ -23,6 +23,7 @@ echo "rpcallowip=0.0.0.0/0" >> ~/.bitcoin/bitcoin.conf
 echo "rpcport=8332" >> ~/.bitcoin/bitcoin.conf
 echo "rpcuser=bitcoin" >> ~/.bitcoin/bitcoin.conf
 echo "rpcpassword=${password}" >> ~/.bitcoin/bitcoin.conf
+echo "txindex=1" >> ~/.bitcoin/bitcoin.conf
 echo "@reboot /usr/local/bin/bitcoind -daemon -conf=/root/.bitcoin/bitcoin.conf" >> mycron
 crontab mycron
 rm mycron
