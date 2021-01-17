@@ -74,12 +74,60 @@ resource "aws_network_interface" "this" {
   subnet_id = tolist(data.aws_subnet_ids.all.ids)[count.index]
 }
 
+resource "aws_iam_role" "daemon_role" {
+  name = "daemon_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_instance_profile" "daemon_profile" {
+  name = "daemon_profile"
+  role = "${aws_iam_role.daemon_role.name}"
+}
+
+resource "aws_iam_role_policy" "daemon_policy" {
+  name = "daemon_policy"
+  role = "${aws_iam_role.daemon_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:GetAuthorizationToken"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_instance" "daemon" {
   ami                         = data.aws_ami.amazon_linux.id
   instance_type               = "t4g.large"
   subnet_id                   = tolist(data.aws_subnet_ids.all.ids)[0]
   vpc_security_group_ids      = [module.security_group.this_security_group_id]
   associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.daemon_profile.name
 
   user_data = templatefile("user-data.sh.tpl", {
     password = random_password.password.result
