@@ -20,7 +20,7 @@ pkb = p_key.private_bytes(
 
 
 def get_conn():
-    return snowflake.connector.connect(
+    conn = snowflake.connector.connect(
         user=SFUSER,
         account=SFACCOUNT,
         private_key=pkb,
@@ -28,13 +28,18 @@ def get_conn():
             'QUERY_TAG': 'RPC2STAGE',
         }
     )
+    conn.cursor().execute("USE DATABASE BTC;")
+    return conn
+
+
+conn = get_conn()
+
 
 def upload_batch(file):
-    conn=get_conn()
     print("uploading %s" % file)
-    sql = "PUT file:///root/%s % file"
-    sql += " @%btc_blockchain_raw"
 
+    sql = "PUT file:///root/%s" % file
+    sql += " @btc_stage auto_compress=true"
     conn.cursor().execute(sql)
     os.remove(file)
 
