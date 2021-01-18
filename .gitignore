@@ -3,3 +3,4 @@
 terraform.tfstate*
 .terraform.lock.hcl
 config.env
+.DS_Store
