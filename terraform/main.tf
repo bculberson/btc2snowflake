@@ -121,16 +121,16 @@ EOF
 
 resource "aws_iam_instance_profile" "daemon_profile" {
   name = "daemon_profile"
-  role = "${aws_iam_role.daemon_role.name}"
+  role = aws_iam_role.daemon_role.name
 }
 
 resource "aws_iam_role_policy" "daemon_policy" {
   name = "daemon_policy"
-  role = "${aws_iam_role.daemon_role.id}"
+  role = aws_iam_role.daemon_role.id
 
   policy = <<EOF
 {
-  "Version": "2012-10-17",
+  "Version":"2012-10-17",
   "Statement": [
     {
       "Action": [
@@ -140,7 +140,8 @@ resource "aws_iam_role_policy" "daemon_policy" {
           "secretsmanager:GetResourcePolicy",
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",
-          "secretsmanager:ListSecretVersionIds"
+          "secretsmanager:ListSecretVersionIds",
+          "s3:GetObject"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -148,6 +149,20 @@ resource "aws_iam_role_policy" "daemon_policy" {
   ]
 }
 EOF
+}
+
+data "aws_ebs_snapshot" "btcdata" {
+  most_recent = true
+
+  filter {
+    name   = "volume-size"
+    values = ["512"]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["btcdata"]
+  }
 }
 
 resource "aws_instance" "daemon" {
@@ -159,7 +174,8 @@ resource "aws_instance" "daemon" {
   iam_instance_profile        = aws_iam_instance_profile.daemon_profile.name
 
   user_data = templatefile("user-data.sh.tpl", {
-    password = random_password.password.result
+    password     = random_password.password.result,
+    start_bucket = aws_s3_bucket_object.startup_script.bucket
   })
 
   tags = {
@@ -174,8 +190,13 @@ resource "aws_instance" "daemon" {
   ebs_block_device {
     device_name           = "/dev/sdg"
     volume_size           = 512
+    snapshot_id           = data.aws_ebs_snapshot.btcdata.id
     volume_type           = "sc1"
     delete_on_termination = true
+
+    tags = {
+      Name = "btcdata"
+    }
   }
 }
 
