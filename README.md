@@ -87,4 +87,10 @@ examples of json from blockchain:
 ```
 
 
+TODO:
 
+ACLs, stage, table:
+Add Snowflake to terraform
+
+Streams & Tasks:
+Split transactions from blocks, shard by hash
