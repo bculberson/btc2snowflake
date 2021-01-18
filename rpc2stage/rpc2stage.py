@@ -28,7 +28,6 @@ def get_conn():
             'QUERY_TAG': 'RPC2STAGE',
         }
     )
-    conn.cursor().execute("USE DATABASE BTC;")
     return conn
 
 
