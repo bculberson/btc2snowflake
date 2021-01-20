@@ -10,20 +10,13 @@ or direct:
 
     eth:0xD1C3c13277eA22eBED0Aef19C1b4B001d81f1433
 
-Data will land in stage for table btc_blockchain_raw which can be created like:
-
-```sql
-    CREATE TABLE IF NOT EXISTS btc_blockchain_raw (src variant);
-```
-
-How to upload your private key to secrets manager
+How to start:
 
 ```shell
-    aws secretsmanager put-secret-value --secret-string "$(< rsa_key.p8)" --secret-id sfprivatekey
+pushd terraform && terraform apply --target aws_ecr_repository.rpc2stage && popd
+pushd ../rpc2stage && ./deploy.sh && popd
+pushd terraform && terraform apply
 ```
-
-You also need secrets set for sfaccount, sfuser, sfprivatekeypassword
-
 
 examples of json from blockchain:
 
@@ -86,11 +79,6 @@ examples of json from blockchain:
 
 ```
 
-
 TODO:
 
-ACLs, stage, table:
-Add Snowflake to terraform
-
-Streams & Tasks:
-Split transactions from blocks, shard by hash
+Create task to load data from stage, and transform to transactions and blocks.
