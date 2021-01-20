@@ -20,16 +20,27 @@ resource "aws_secretsmanager_secret" "sfuser" {
   name = "sfuser"
 }
 
+resource "aws_secretsmanager_secret_version" "sfuser" {
+  secret_id     = aws_secretsmanager_secret.sfuser.id
+  secret_string = snowflake_user.user.name
+}
+
 resource "aws_secretsmanager_secret" "sfaccount" {
   name = "sfaccount"
+}
+
+resource "aws_secretsmanager_secret_version" "sfaccount" {
+  secret_id     = aws_secretsmanager_secret.sfprivatekey.id
+  secret_string = var.snowflake_account
 }
 
 resource "aws_secretsmanager_secret" "sfprivatekey" {
   name = "sfprivatekey"
 }
 
-resource "aws_secretsmanager_secret" "sfprivatekeypassword" {
-  name = "sfprivatekeypassword"
+resource "aws_secretsmanager_secret_version" "sfprivatekey" {
+  secret_id     = aws_secretsmanager_secret.sfprivatekey.id
+  secret_string = tls_private_key.svc_key.private_key_pem
 }
 
 data "aws_vpc" "default" {
@@ -205,10 +216,3 @@ resource "aws_eip" "ip" {
   instance = aws_instance.daemon.id
 }
 
-output "ip" {
-  value = aws_eip.ip.public_ip
-}
-
-output "rpcpassword" {
-  value = random_password.password.result
-}

@@ -13,11 +13,3 @@ resource "aws_s3_bucket_object" "startup_script" {
   bucket = aws_s3_bucket.data.id
   source = "start.sh"
 }
-
-output "repository_url" {
-  value = aws_ecr_repository.rpc2stage.repository_url
-}
-
-output "start_bucket" {
-  value = aws_s3_bucket_object.startup_script.bucket
-}

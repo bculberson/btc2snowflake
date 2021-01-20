@@ -2,5 +2,5 @@
 .terraform
 terraform.tfstate*
 .terraform.lock.hcl
-config.env
+*.env
 .DS_Store

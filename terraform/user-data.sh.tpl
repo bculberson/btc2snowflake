@@ -6,6 +6,7 @@ cat /home/ec2-user/.ssh/rsa-2021-01-15.pub >> /home/ec2-user/.ssh/authorized_key
 yum -y update
 yum install -y jq docker xfsprogs
 service docker start
+systemctl enable docker
 usermod -a -G docker ec2-user
 # mkfs -t xfs /dev/nvme1n1
 mkdir /data
