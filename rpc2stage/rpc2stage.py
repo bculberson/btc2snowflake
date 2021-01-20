@@ -11,7 +11,7 @@ SFPRIVATEKEY = os.getenv('SFPRIVATEKEY')
 
 FLUSH_SIZE = 100000000
 
-p_key= serialization.load_pem_private_key(SFPRIVATEKEY.encode('utf-8'), password=None backend=default_backend())
+p_key= serialization.load_pem_private_key(SFPRIVATEKEY.encode('utf-8'), password=None, backend=default_backend())
 pkb = p_key.private_bytes(
     encoding=serialization.Encoding.DER,
     format=serialization.PrivateFormat.PKCS8,
