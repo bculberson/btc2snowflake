@@ -30,7 +30,7 @@ resource "aws_secretsmanager_secret" "sfaccount" {
 }
 
 resource "aws_secretsmanager_secret_version" "sfaccount" {
-  secret_id     = aws_secretsmanager_secret.sfprivatekey.id
+  secret_id     = aws_secretsmanager_secret.sfaccount.id
   secret_string = var.snowflake_account
 }
 
