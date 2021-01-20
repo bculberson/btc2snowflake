@@ -14,7 +14,7 @@ How to start:
 
 ```shell
 pushd terraform && terraform apply --target aws_ecr_repository.rpc2stage && popd
-pushd ../rpc2stage && ./deploy.sh && popd
+pushd rpc2stage && ./deploy.sh && popd
 pushd terraform && terraform apply
 ```
 
