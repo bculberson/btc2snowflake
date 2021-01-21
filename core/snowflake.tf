@@ -61,7 +61,7 @@ resource "snowflake_stage_grant" "grant_read" {
 
   privilege = "READ"
 
-  roles = [snowflake_role.dml_role.name]
+  roles = ["ACCOUNTADMIN", snowflake_role.dml_role.name]
 
   with_grant_option = false
 }
@@ -73,7 +73,7 @@ resource "snowflake_stage_grant" "grant_write" {
 
   privilege = "WRITE"
 
-  roles = [snowflake_role.dml_role.name]
+  roles = ["ACCOUNTADMIN", snowflake_role.dml_role.name]
 
   with_grant_option = false
 }
@@ -86,7 +86,7 @@ resource "snowflake_table" "table" {
 
   column {
     name = "src"
-    type = "variant"
+    type = "VARIANT"
   }
 }
 

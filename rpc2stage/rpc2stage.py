@@ -8,9 +8,9 @@ from cryptography.hazmat.primitives import serialization
 SFACCOUNT = os.getenv('SFACCOUNT')
 SFUSER = os.getenv('SFUSER')
 SFPRIVATEKEY = os.getenv('SFPRIVATEKEY')
-FLUSH_SIZE = os.getenv('FLUSH_SIZE')
+FLUSH_SIZE = int(os.getenv('FLUSH_SIZE'))
 
-p_key= serialization.load_pem_private_key(SFPRIVATEKEY.encode('utf-8'), password=None, backend=default_backend())
+p_key = serialization.load_pem_private_key(SFPRIVATEKEY.encode('utf-8'), password=None, backend=default_backend())
 pkb = p_key.private_bytes(
     encoding=serialization.Encoding.DER,
     format=serialization.PrivateFormat.PKCS8,
@@ -18,6 +18,7 @@ pkb = p_key.private_bytes(
 
 
 def get_conn():
+    global conn
     conn = snowflake.connector.connect(
         user=SFUSER,
         account=SFACCOUNT,
