@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker buildx create --use --name rpc2stage
+docker buildx create --use --name explorer
 docker buildx inspect --bootstrap
 docker run --privileged linuxkit/binfmt:v0.8
 

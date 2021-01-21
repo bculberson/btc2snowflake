@@ -6,10 +6,6 @@ output "corerpcuri" {
   value = aws_secretsmanager_secret_version.corerpc.secret_string
 }
 
-output "repository_url" {
-  value = aws_ecr_repository.rpc2stage.repository_url
-}
-
 output "startup_script_bucket" {
   value = aws_s3_bucket_object.startup_script.bucket
 }

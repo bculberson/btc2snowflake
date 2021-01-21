@@ -16,6 +16,15 @@ resource "aws_secretsmanager_secret_version" "corerpc" {
   secret_string = "http://bitcoin:${random_password.password.result}@${aws_instance.daemon.private_ip}:8332"
 }
 
+resource "aws_secretsmanager_secret" "corerpcpassword" {
+  name = "corerpcpassword"
+}
+
+resource "aws_secretsmanager_secret_version" "corerpcpassword" {
+  secret_id     = aws_secretsmanager_secret.corerpcpassword.id
+  secret_string = random_password.password.result
+}
+
 resource "aws_secretsmanager_secret" "sfuser" {
   name = "sfuser"
 }
@@ -162,20 +171,6 @@ resource "aws_iam_role_policy" "daemon_policy" {
 EOF
 }
 
-data "aws_ebs_snapshot" "btcdata" {
-  most_recent = true
-
-  filter {
-    name   = "volume-size"
-    values = ["512"]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = ["btcdata"]
-  }
-}
-
 resource "aws_instance" "daemon" {
   ami                         = data.aws_ami.amazon_linux.id
   instance_type               = "t4g.large"
@@ -197,22 +192,61 @@ resource "aws_instance" "daemon" {
     volume_type = "standard"
     volume_size = 10
   }
+}
 
-  ebs_block_device {
-    device_name           = "/dev/sdg"
-    volume_size           = 512
-    snapshot_id           = data.aws_ebs_snapshot.btcdata.id
-    volume_type           = "sc1"
-    delete_on_termination = true
+data "aws_ebs_volume" "ebs_volume" {
+  most_recent = true
 
-    tags = {
-      Name = "btcdata"
-    }
+  filter {
+    name   = "status"
+    values = ["available", "in-use"]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["btcdata"]
   }
 }
+
+resource "aws_volume_attachment" "ebs_existing" {
+  device_name  = "/dev/sdg"
+  volume_id    = data.aws_ebs_volume.ebs_volume.id
+  instance_id  = aws_instance.daemon.id
+  skip_destroy = true
+}
+
+/*
+resource "aws_ebs_volume" "empty_ebs_volume" {
+  availability_zone = aws_instance.daemon.availability_zone
+  type              = "sc1"
+  size              = 512
+
+  tags = {
+    Name = "btcdata"
+  }
+}
+
+resource "aws_volume_attachment" "ebs_new" {
+  device_name  = "/dev/sdg"
+  volume_id    = aws_ebs_volume.empty_ebs_volume.id
+  instance_id  = aws_instance.daemon.id
+  skip_destroy = true
+}
+*/
 
 resource "aws_eip" "ip" {
   vpc      = true
   instance = aws_instance.daemon.id
 }
 
+resource "aws_s3_bucket" "data" {
+  bucket = "btc2snowflake-rpc2stage"
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_object" "startup_script" {
+  key    = "start.sh"
+  bucket = aws_s3_bucket.data.id
+  source = "start.sh"
+  etag   = filemd5("start.sh")
+}
