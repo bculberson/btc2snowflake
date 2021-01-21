@@ -9,7 +9,7 @@ terraform apply
 
 REPO=`terraform output --raw repository_url`
 bash -c "`aws ecr get-login --region us-west-2 --no-include-email`"
-docker buildx build --platform linux/amd64,linux/arm64 -t ${REPO}:latest --push .
+docker buildx build --platform linux/arm64 -t ${REPO}:latest --push .
 
 
 
