@@ -194,29 +194,6 @@ resource "aws_instance" "daemon" {
   }
 }
 
-/*
-data "aws_ebs_volume" "ebs_volume" {
-  most_recent = true
-
-  filter {
-    name   = "status"
-    values = ["available", "in-use"]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = ["btcdata"]
-  }
-}
-
-resource "aws_volume_attachment" "ebs_existing" {
-  device_name  = "/dev/sdg"
-  volume_id    = data.aws_ebs_volume.ebs_volume.id
-  instance_id  = aws_instance.daemon.id
-  skip_destroy = true
-}
-*/
-
 resource "aws_ebs_volume" "empty_ebs_volume" {
   availability_zone = aws_instance.daemon.availability_zone
   type              = "gp3"
