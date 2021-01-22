@@ -196,7 +196,7 @@ resource "aws_instance" "daemon" {
 
 resource "aws_ebs_volume" "empty_ebs_volume" {
   availability_zone = aws_instance.daemon.availability_zone
-  type              = "gp3"
+  type              = "st1"
   size              = 512
 
   tags = {
