@@ -15,7 +15,7 @@ How to start:
 ```shell
 pushd btc-rpc-explorer && ./deploy.sh && popd
 pushd rpc2stage && ./deploy.sh && popd
-pushd core && ./deplot.sh && popd
+pushd core && ./deploy.sh && popd
 ```
 
 examples of json from blockchain:
