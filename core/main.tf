@@ -194,6 +194,7 @@ resource "aws_instance" "daemon" {
   }
 }
 
+/*
 data "aws_ebs_volume" "ebs_volume" {
   most_recent = true
 
@@ -214,11 +215,11 @@ resource "aws_volume_attachment" "ebs_existing" {
   instance_id  = aws_instance.daemon.id
   skip_destroy = true
 }
+*/
 
-/*
 resource "aws_ebs_volume" "empty_ebs_volume" {
   availability_zone = aws_instance.daemon.availability_zone
-  type              = "sc1"
+  type              = "gp3"
   size              = 512
 
   tags = {
@@ -232,7 +233,6 @@ resource "aws_volume_attachment" "ebs_new" {
   instance_id  = aws_instance.daemon.id
   skip_destroy = true
 }
-*/
 
 resource "aws_eip" "ip" {
   vpc      = true
