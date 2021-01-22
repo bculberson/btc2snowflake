@@ -13,9 +13,9 @@ or direct:
 How to start:
 
 ```shell
-pushd terraform && terraform apply --target aws_ecr_repository.rpc2stage && popd
+pushd btc-rpc-explorer && ./deploy.sh && popd
 pushd rpc2stage && ./deploy.sh && popd
-pushd terraform && terraform apply
+pushd core && ./deplot.sh && popd
 ```
 
 examples of json from blockchain:
