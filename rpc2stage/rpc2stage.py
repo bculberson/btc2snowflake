@@ -38,23 +38,10 @@ def upload_batch(file):
     print("uploading %s" % file)
 
     sql = "PUT file:///root/%s" % file
-    sql += " @BTC.BTC.\"btc_stage\" auto_compress=true;"
+    sql += " @BTC.BTC.\"btc_stage\" OVERWRITE=TRUE;"
     conn.cursor().execute(sql)
     os.remove(file)
 
 
-batch = 0
-batch_name = "batch_%d.json" % batch
-
-f = open(batch_name, "a+")
 for line in fileinput.input():
-    f.write(line)
-    if line.startswith("]"):
-        f.close()
-        upload_batch(batch_name)
-        batch+=1
-        batch_name = "batch_%d.json" % batch
-        f = open(batch_name, "w")
-
-f.close()
-upload_batch(batch_name)
+    upload_batch(line.rstrip())

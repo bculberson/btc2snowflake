@@ -24,3 +24,9 @@ variable "instance_type" {
   description = "The instance_type for the core server"
   default     = "t3a.medium"
 }
+
+variable "volume_type" {
+  type        = string
+  description = "The volume_type for the core server"
+  default     = "st1"
+}

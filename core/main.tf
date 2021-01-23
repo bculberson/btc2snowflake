@@ -190,7 +190,7 @@ resource "aws_instance" "daemon" {
 
   root_block_device {
     volume_type = "standard"
-    volume_size = 10
+    volume_size = 32
   }
 
   ebs_block_device {
@@ -198,7 +198,7 @@ resource "aws_instance" "daemon" {
     delete_on_termination = true
     snapshot_id = var.snapshot != "none" ? var.snapshot : null
     volume_size = 512
-    volume_type = "st1"
+    volume_type = var.volume_type
   }
 }
 
