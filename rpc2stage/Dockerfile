@@ -1,7 +1,7 @@
 FROM python:3.7
 
 RUN python -m pip install --upgrade pip
-RUN pip install -Iv bitcoin-etl==1.4.0
+RUN pip install -Iv bitcoin-etl[streaming]==1.4.0
 RUN pip install -Iv snowflake-connector-python==2.2.9
 
 COPY rpc2stage.py /root

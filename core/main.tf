@@ -173,7 +173,7 @@ EOF
 
 resource "aws_instance" "daemon" {
   ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = "t4g.large"
+  instance_type               = "t4g.medium"
   subnet_id                   = tolist(data.aws_subnet_ids.all.ids)[0]
   vpc_security_group_ids      = [module.security_group.this_security_group_id]
   associate_public_ip_address = true
@@ -192,23 +192,14 @@ resource "aws_instance" "daemon" {
     volume_type = "standard"
     volume_size = 10
   }
-}
 
-resource "aws_ebs_volume" "empty_ebs_volume" {
-  availability_zone = aws_instance.daemon.availability_zone
-  type              = "st1"
-  size              = 512
-
-  tags = {
-    Name = "btcdata"
+  ebs_block_device {
+    device_name = "/dev/sdg"
+    delete_on_termination = true
+    snapshot_id = var.snapshot != "none" ? var.snapshot : null
+    volume_size = 512
+    volume_type = "st1"
   }
-}
-
-resource "aws_volume_attachment" "ebs_new" {
-  device_name  = "/dev/sdg"
-  volume_id    = aws_ebs_volume.empty_ebs_volume.id
-  instance_id  = aws_instance.daemon.id
-  skip_destroy = true
 }
 
 resource "aws_eip" "ip" {
