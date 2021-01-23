@@ -18,3 +18,9 @@ variable "snapshot" {
   description = "The snapshot_id for a bitcoin data volume"
   default     = "none"
 }
+
+variable "instance_type" {
+  type        = string
+  description = "The instance_type for the core server"
+  default     = "t3a.medium"
+}

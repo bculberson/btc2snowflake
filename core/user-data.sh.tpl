@@ -5,7 +5,7 @@ chmod 400 /home/ec2-user/.ssh/rsa-2021-01-15.pub
 cat /home/ec2-user/.ssh/rsa-2021-01-15.pub >> /home/ec2-user/.ssh/authorized_keys
 amazon-linux-extras install -y epel
 yum -y update
-yum install -y jq docker xfsprogs tor
+yum install -y jq docker xfsprogs tor golang git
 service docker start
 systemctl enable docker
 usermod -a -G docker ec2-user
@@ -14,7 +14,12 @@ useradd -g bitcoin bitcoin
 usermod -a -G docker bitcoin
 usermod -a -G toranon bitcoin
 
-aws s3 cp s3://${start_bucket}/bitcoin-0.21.0-aarch64-linux-gnu.tar.gz /root/bitcoin.tar.gz
+fallocate -l 4G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+
+aws s3 cp s3://${start_bucket}/bitcoin-0.21.0-x86_64-linux-gnu.tar.gz /root/bitcoin.tar.gz
 pushd /root && tar xzf /root/bitcoin.tar.gz && popd
 install -m 0755 -o root -g root -t /usr/local/bin /root/bitcoin-0.21.0/bin/*
 

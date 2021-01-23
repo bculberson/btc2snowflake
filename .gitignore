@@ -4,5 +4,5 @@ terraform.tfstate*
 .terraform.lock.hcl
 *.env
 .DS_Store
-bitcoin-*-aarch64-linux-gnu.tar.gz
+bitcoin-*-linux-gnu.tar.gz
 *.backup
