@@ -69,7 +69,7 @@ data "aws_ami" "amazon_linux" {
     name = "name"
 
     values = [
-      "amzn2-ami-hvm-*-arm64-gp2",
+      "amzn2-ami-hvm-*-x86_64-gp2",
     ]
   }
 
@@ -173,7 +173,7 @@ EOF
 
 resource "aws_instance" "daemon" {
   ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = "t4g.medium"
+  instance_type               = var.instance_type
   subnet_id                   = tolist(data.aws_subnet_ids.all.ids)[0]
   vpc_security_group_ids      = [module.security_group.this_security_group_id]
   associate_public_ip_address = true

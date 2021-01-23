@@ -118,5 +118,9 @@ resource "snowflake_user" "user" {
   default_role      = snowflake_role.dml_role.name
   default_namespace = "${snowflake_database.db.name}.${snowflake_schema.schema.name}"
   rsa_public_key    = substr(tls_private_key.svc_key.public_key_pem, 27, 398)
+}
 
+resource "snowflake_role_grants" "grants" {
+  role_name = snowflake_role.dml_role.name
+  users = [snowflake_user.user.name]
 }
