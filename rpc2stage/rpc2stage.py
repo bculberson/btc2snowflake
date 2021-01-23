@@ -22,6 +22,8 @@ def get_conn():
     conn = snowflake.connector.connect(
         user=SFUSER,
         account=SFACCOUNT,
+        database='BTC',
+        schema='BTC',
         private_key=pkb,
         session_parameters={
             'QUERY_TAG': 'RPC2STAGE',
@@ -37,7 +39,7 @@ def upload_batch(file):
     print("uploading %s" % file)
 
     sql = "PUT file:///root/%s" % file
-    sql += " @btc_stage auto_compress=true"
+    sql += " @\"btc_stage\" auto_compress=true"
     conn.cursor().execute(sql)
     os.remove(file)
 

@@ -13,3 +13,8 @@ variable "snowflake_password" {
   description = "The password for the snowflake user (with ACCOUNTADMIN)"
 }
 
+variable "snapshot" {
+  type        = string
+  description = "The snapshot_id for a bitcoin data volume"
+  default     = "none"
+}
