@@ -8,7 +8,7 @@ or direct:
 
     bitcoin:bc1que4ks2m3hm874swquqmcmzx2zy5m5qvyt0gdma
 
-    eth:0xD1C3c13277eA22eBED0Aef19C1b4B001d81f1433
+    eth:bculberson.eth
 
 How to start:
 
